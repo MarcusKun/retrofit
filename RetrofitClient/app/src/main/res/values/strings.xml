@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RetrofitClient</string>
+    <string name="query">以Query方式提交参数</string>
+    <string name="query_map">以QueryMap方式提交参数</string>
+    <string name="field">以Field方式提交参数</string>
+    <string name="field_map">以FieldMap方式提交参数</string>
+    <string name="part1">以Part方式(@Part MultipartBody.Part part)提交参数</string>
+    <string name="part2">以Part方式(@Part("username") RequestBody body)提交参数</string>
+    <string name="part_map">以PartMap方式提交参数</string>
+</resources>

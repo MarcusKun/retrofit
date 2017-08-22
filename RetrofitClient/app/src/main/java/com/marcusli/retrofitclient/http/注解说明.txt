@@ -1,0 +1,67 @@
+1.网络请求方法
+  放在接口里的方法上
+  所有注解都对应Http中的网络请求方法,可以指定URL,也可以不指定,例如:@GET("xxx/xxx")
+  @GET
+  @POST
+  @PUT
+  @DELETE
+  @PATH
+  @HEAD
+  @OPTIONS
+  @HTTP:这个注解比较特殊,用于替换上面几个注解的作用,以及扩展更多功能
+2.标记类的注解
+  放在接口里的方法上
+  @FormUrlEncoded:表示请求体是一个Form表单
+  @Multipart:表示请求发送multipart数据,需要配合@Part一起使用,通常用于文件上传
+  @Streaming:表示返回的数据是以流的形式返回;适用于返回较大数据的情况
+3.网络请求参数
+  @Headers:添加请求头,请求头不会相互覆盖,所有同名的请求头都会包含在请求中
+           @Headers("Cache-Control: max-age=640000")
+           @GET("/")
+  @Header:用目标值来替换请求头中的值
+           @GET("/")
+           Call<ResponseBody> foo(@Header("Accept-Language") String lang);
+           和@Headers的区别在于,@Headers中的值是一开始在方法中固定写好的,而这个是可变的
+  @HeaderMap:用map的方式来添加多个请求头
+           @GET("/")
+           void list(@HeaderMap Map<String, String> headers);
+  @Body:以POST/PUT方式传递,把对象转换成需要的字符串发送到服务器
+  @Field:发送Post请求,以表单的方式提交数据,需要配合@FormUrlEncoded注解一起使用
+           @FormUrlEncoded
+           @POST("/")
+           Call<ResponseBody> example(
+               @Field("name") String name,
+               @Field("occupation") String occupation);
+  @FieldMap:以map的方式来提交多个请求数据
+           @FormUrlEncoded
+           @POST("/")
+           Call<ResponseBody> things(@FieldMap Map<String, Object> fields);
+  @Part:发送Post请求,把多个参数封装到一个部分中,配合@Multipart注解一起使用,这个注解支持三种类型的传入
+           @Part MultipartBody.Part part
+           @Part("foo") RequestBody foo
+           @Part("foo") Image photo : 即任意类型的对象
+           @Multipart
+           @POST("/")
+           Call<ResponseBody> example(
+               @Part("description") String description,
+               @Part(value = "image", encoding = "8-bit") RequestBody image);
+  @PartMap:以map的方式来提交多个请求数据
+           @Multipart
+           @POST("/")
+           Call<ResponseBody> upload(
+               @Part("file") RequestBody file,
+               @PartMap Map<String, RequestBody> params);
+  @Query:用于GET方法提交数据,提交的数据会被添加到URL后面
+           @GET("/friends")
+           Call<ResponseBody> friends(@Query("page") int page);
+  @QueryMap:以map的方式来提交多个请求数据
+           @GET("/")
+           Call<ResponseBody> friends(@QueryMap Map<String, String> filters);
+  @Path:给URL配置缺省值
+           @GET("/{name}")
+           Call<ResponseBody> encoded(@Path("name") String name);
+           比如我们访问的地址是https://github.com/{name}
+           在发起请求时,{name}会被替换为方法的第一个参数 name（被@Path注解作用）
+  @URL:设置URL,设置了URL后,GET/POST/...就不用再配置URL了
+           @GET
+           Call<ResponseBody> list(@Url String url);
